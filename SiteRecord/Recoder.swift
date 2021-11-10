@@ -1,34 +1,19 @@
 //
-//  ViewController.swift
+//  Recoder.swift
 //  SiteRecord
 //
-//  Created by koyasu on 2021/11/05.
+//  Created by koyasu on 2021/11/09.
 //
 
-import UIKit
 import Foundation
 import AVFoundation
 import Speech
 
-class ViewController: UIViewController {
-    @IBOutlet weak var Button: UIButton!
-    @IBOutlet weak var audioText: UILabel!
-    var buttonStatus: Bool = false
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        try! self.startRecording()
-        // Do any additional setup after loading the view.
-    }
+class SpeechRecorder{
     
-    @IBAction func didTapButton(sender: UIButton)
-    {
-        buttonStatus.toggle()
-        if buttonStatus{
-            Button.setTitle("録音終了", for: .normal)
-//            try! self.startRecording()
-        }else{
-            Button.setTitle("録音開始", for: .normal)
-//            try! self.stopRecording()
+    var audioText: String = ""{
+        didSet{
+        
         }
     }
     private var audioEngine = AVAudioEngine()
@@ -65,7 +50,7 @@ class ViewController: UIViewController {
             self.stopRecording()
             return
         }
-        self.audioText.text = ""
+        self.audioText = ""
         recognitionRequest?.shouldReportPartialResults = true
         if #available(iOS 13, *) {
             recognitionRequest?.requiresOnDeviceRecognition = false
@@ -79,7 +64,7 @@ class ViewController: UIViewController {
             var isFinal = false
             if let result = result {
                 isFinal = result.isFinal
-                self.audioText.text = result.bestTranscription.formattedString
+                self.audioText = result.bestTranscription.formattedString
                 print(result.bestTranscription.formattedString)
             }
             if isFinal { //録音タイムリミット
@@ -96,4 +81,3 @@ class ViewController: UIViewController {
         try self.audioEngine.start()
     }
 }
-
