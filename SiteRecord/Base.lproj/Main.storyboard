@@ -17,18 +17,50 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bss-M0-AE9">
-                                <rect key="frame" x="174" y="433" width="67" height="31"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bss-M0-AE9">
+                                <rect key="frame" x="125" y="344" width="164" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="DZk-GO-1dB"/>
+                                </constraints>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="Button"/>
                                 <connections>
                                     <action selector="didTapButtonWithSender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ga6-80-MJv"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pNr-t7-Oey">
-                                <rect key="frame" x="0.0" y="44" width="414" height="304"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pNr-t7-Oey">
+                                <rect key="frame" x="0.0" y="44" width="414" height="300"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="300" id="Zqf-od-fkp"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jee-mf-GKU">
+                                <rect key="frame" x="0.0" y="424" width="207" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="FTc-6h-dCM"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="はい"/>
+                                <connections>
+                                    <action selector="tappedYesButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ZXz-2U-fgc"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5LO-2U-sfQ">
+                                <rect key="frame" x="207" y="424" width="207" height="40"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="いいえ"/>
+                                <connections>
+                                    <action selector="tappedNoButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="qBe-xp-kbq"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Message" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VRZ-ar-pAc">
+                                <rect key="frame" x="0.0" y="384" width="414" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="a6t-AI-BrI"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -36,10 +68,31 @@
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="5LO-2U-sfQ" firstAttribute="width" secondItem="jee-mf-GKU" secondAttribute="width" id="16q-s1-q5P"/>
+                            <constraint firstItem="VRZ-ar-pAc" firstAttribute="top" secondItem="bss-M0-AE9" secondAttribute="bottom" id="1Rr-Mg-b89"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="bss-M0-AE9" secondAttribute="trailing" constant="125" id="2b6-DL-dDJ"/>
+                            <constraint firstItem="jee-mf-GKU" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="3Kp-UV-cak"/>
+                            <constraint firstItem="5LO-2U-sfQ" firstAttribute="top" secondItem="VRZ-ar-pAc" secondAttribute="bottom" id="AEG-yc-Cj7"/>
+                            <constraint firstItem="bss-M0-AE9" firstAttribute="top" secondItem="pNr-t7-Oey" secondAttribute="bottom" id="Cgg-WC-fKx"/>
+                            <constraint firstItem="pNr-t7-Oey" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="JHZ-O9-hUo"/>
+                            <constraint firstItem="5LO-2U-sfQ" firstAttribute="centerY" secondItem="jee-mf-GKU" secondAttribute="centerY" id="JkD-yK-RPh"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="VRZ-ar-pAc" secondAttribute="trailing" id="Lrf-OF-tX8"/>
+                            <constraint firstItem="jee-mf-GKU" firstAttribute="top" secondItem="VRZ-ar-pAc" secondAttribute="bottom" id="PXi-Wz-hgi"/>
+                            <constraint firstItem="5LO-2U-sfQ" firstAttribute="leading" secondItem="jee-mf-GKU" secondAttribute="trailing" id="Rlx-Xs-Ln4"/>
+                            <constraint firstItem="VRZ-ar-pAc" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="V58-jb-dYt"/>
+                            <constraint firstItem="pNr-t7-Oey" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="Vi4-kZ-eeY"/>
+                            <constraint firstItem="bss-M0-AE9" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="125" id="i01-IQ-G43"/>
+                            <constraint firstItem="pNr-t7-Oey" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="piC-qe-S6B"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="5LO-2U-sfQ" secondAttribute="trailing" id="si4-Lu-ivX"/>
+                        </constraints>
                     </view>
                     <connections>
                         <outlet property="Button" destination="bss-M0-AE9" id="pFL-4z-Nv9"/>
                         <outlet property="displayText" destination="pNr-t7-Oey" id="iWl-MU-7He"/>
+                        <outlet property="messageLabel" destination="VRZ-ar-pAc" id="hYC-TL-UDz"/>
+                        <outlet property="noButton" destination="5LO-2U-sfQ" id="Vdf-o7-lDx"/>
+                        <outlet property="yesButton" destination="jee-mf-GKU" id="PF2-MZ-Y8k"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
