@@ -24,10 +24,10 @@ class ViewController: UIViewController, AVSpeechSynthesizerDelegate, SFSpeechRec
         }
     }
     var recordStatus: Int = 0
-
-    
+    var stopStatus = 0
     var inputString: String = " "
     var talker = AVSpeechSynthesizer()
+//    var speakText = SpeakText()
     @IBOutlet weak var Button: UIButton!
     @IBOutlet weak var displayText: UILabel!
     @IBOutlet weak var messageLabel: UILabel!
@@ -83,10 +83,10 @@ class ViewController: UIViewController, AVSpeechSynthesizerDelegate, SFSpeechRec
     func stopRecording(){
         print("stopRecording")
         self.recognitionRequest?.endAudio()
-        self.recognitionRequest = nil
-//        self.recognitionTask?.cancel()
+//        self.recognitionRequest = nil
+        self.recognitionTask?.cancel()
         self.recognitionTask?.finish()
-        self.recognitionTask = nil
+//        self.recognitionTask = nil
         self.audioEngine.stop()
         self.audioEngine.inputNode.removeTap(onBus: 0)
 //        recordStatus = 0
@@ -102,76 +102,86 @@ class ViewController: UIViewController, AVSpeechSynthesizerDelegate, SFSpeechRec
     //音声認識の開始
     func startRecording() throws {
         
+        
         print("startRecording")
+        self.displayText.text = ""
+        self.inputString = ""
+        self.recordStatus = 0
+        print("recordStatus:\(self.recordStatus)")
         //既存のセッションが存在したら切る。
         if let recognitionTask = recognitionTask {
+            print("既存のセッションを削除します")
             recognitionTask.cancel()
             self.recognitionTask = nil
         }
         
         //オーディオセッションの作成
+        print("オーディオセッションを作成します")
+        if stopStatus == 0 {
         let audioSession = AVAudioSession.sharedInstance()
         try audioSession.setCategory(.record, mode: .measurement, options: .duckOthers)
         try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
+        stopStatus = 0 }
         let inputNode = audioEngine.inputNode
         inputNode.removeTap(onBus: 0)
         self.recognitionTask = SFSpeechRecognitionTask()
-
+        
         //音声認識リクエストの作成
+        print("音声認識リクエストを初期化します")
         self.recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
         if(self.recognitionTask == nil || self.recognitionRequest == nil){
+            print("音声認識リクエストの作成に失敗しました")
             self.stopRecording()
             return
         }
-        self.displayText.text = ""
-        self.inputString = ""
-        self.recordStatus = 0
         
         //オーディオデータをデバイスに保存する設定をON
         recognitionRequest?.shouldReportPartialResults = true
         //認識結果を都度返す設定をON
         recognitionRequest?.requiresOnDeviceRecognition = true
         
-        //recognitionTask関数に音声認識要求オブジェクトを渡すと、音声認識タスクが実行される。
+        //recognitionTask関数に音声リクエストオブジェクトを渡すと、音声認識タスクが実行される。
         recognitionTask = speechRecognizer.recognitionTask(with: recognitionRequest!) { [weak self] result, error in
             guard let `self` = self else { return }
             
-            //エラーが発生したら録音終了※クリ返すとここで落ちる。
+            //エラーが発生したら録音終了※くり返すとここで落ちる。
             if(error != nil){
                 print ("エラー発生:" + String(describing: error!))
-                self.stopRecording()
+//                self.stopRecording()
                 return
             }
+            var isFinal = false //録音タイムリミットを検知する関数
             
-            //録音タイムリミットを検知する関数
-            var isFinal = false
             if let result = result {
                 isFinal = result.isFinal
                 self.inputString = result.bestTranscription.formattedString
-                print(self.recordStatus,self.inputString)
+                print("input:" + self.inputString)
                 
                 //recordstatus ==0 録音開始待ち
                 if self.recordStatus == 0{
                     if self.inputString.contains("録音開始"){
+                        print("音声「録音開始」を認識しました。録音を開始します。")
+                        try! self.speechText("録音を開始します")
                         self.Button.setTitle("録音終了", for: .normal)
                         //self.buttonStatus.toggle()
-                        self.recordStatus += 1
+                        self.recordStatus = 1
                     }
                 }//recordStatus0
                 
                 //recordStatus = 1 録音中、終了待ち
                 if self.recordStatus == 1 {
-                    print(self.recordStatus)
+                    print("recordStatus:\(self.recordStatus)")
                     let range = self.inputString.range(of: "録音開始")
                     if let theRange = range {
                         self.inputString = String(self.inputString[theRange.upperBound...])
-                        print("編集完了",self.inputString)
+//                        print("編集完了",self.inputString)
                     }
                     self.displayText.text! = self.inputString
                     //「録音終了」を検知したときの動作
                     if self.inputString.contains("録音終了"){
-                        self.buttonStatus.toggle()
-                        //録音データの変換、表示
+                        print("音声「録音終了」を認識しました。")
+                    //self.buttonStatus.toggle()
+                        //録音データの変換
                         self.savedString = self.inputString.replacingOccurrences(of:"録音終了" , with: "")
                         self.displayText.text! = self.savedString
                         //画面表示の変換
@@ -179,33 +189,39 @@ class ViewController: UIViewController, AVSpeechSynthesizerDelegate, SFSpeechRec
                         self.messageLabel.text = "この内容で保存しますか？"
                         self.yesButton.isHidden = false
                         self.noButton.isHidden = false
-                        try! self.confirm()
-                        self.recordStatus += 1
-                        print(self.recordStatus)
+                        //コメント音声の発出
+                        try! self.speechText(self.savedString + "を保存しますか？")
+                    //self.speakText.speak(self.savedString + "を保存しました")
+                        
+                        self.recordStatus = 2
                     }
                 }//recordStatus ==1
                 
                 //recordStatus==2 音声を保存するかチェック
                 if self.recordStatus == 2{
+                    print("recordStatus:\(self.recordStatus)")
                     self.displayText.text! = self.savedString
-                    //「はい」を検知したら元に戻す。
-                    if String(self.inputString[self.inputString.index(self.inputString.endIndex, offsetBy: -2)...]) == "はい"{
-                        print(self.inputString)
+                    //「はい」を検知したら保存し、初期状態に戻す
+//                    if String(self.inputString[self.inputString.index(self.inputString.endIndex, offsetBy: -5)...]) == "保存します"{
+                    if self.inputString.contains("保存します"){
+                        print("音声「保存します」を認識しました")
+                        print(self.savedString! + "を保存します")
+                        try! self.speechText("保存しました")
                         try! self.stopRecording()
-                        try! self.startRecording()
-                        //                        self.recordStatus = 0
-                        //ここに表示ジョブを流す
-                        print(self.savedString!,"登録します")
                         self.initialize()
+                        sleep(2)
+                        try! self.startRecording()
                         return
-                    //「いいえ」を検知したら元に戻す。
-                    }else if String(self.inputString[self.inputString.index(self.inputString.endIndex, offsetBy: -3)...]) == "いいえ"{
+                    //「いいえ」を検知したら保存せず、初期状態に戻す
+//                    }else if String(self.inputString[self.inputString.index(self.inputString.endIndex, offsetBy: -6)...]) == "保存しません"{
+                    }else if self.inputString.contains("保存しません"){
+                        print("音声「保存しません」を認識しました")
+                        print(self.savedString! + "は保存しません")
+                        try! self.speechText("保存しません")
                         try! self.stopRecording()
-                        try! self.startRecording()
-//                        self.recordStatus = 0
-                        print(self.savedString!,"登録しません")
                         self.initialize()
-
+                        sleep(2)
+                        try! self.startRecording()
                         return
                     }
                 }//recordStatus == 2
@@ -229,15 +245,15 @@ class ViewController: UIViewController, AVSpeechSynthesizerDelegate, SFSpeechRec
         try self.audioEngine.start()
     }
     
-    //認識した音声を保存するか記録する。
-    func confirm() throws{
-        // 話す内容をセット
+    
+
+    //音声を発声する
+    func speechText(_ text: String) throws{
         try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback)
-        let utterance = AVSpeechUtterance(string: "次の内容で登録しますか？  "+self.savedString)
-        // 言語を日本に設定
+        let utterance = AVSpeechUtterance(string: text)
         utterance.voice = AVSpeechSynthesisVoice(language: "ja-JP")
-        
         self.talker.speak(utterance)
+        return
     }
     
     internal func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didStart utterance: AVSpeechUtterance ) {
@@ -251,29 +267,24 @@ class ViewController: UIViewController, AVSpeechSynthesizerDelegate, SFSpeechRec
 
     //保存確認後、最初の状態に戻す。
     func initialize(){
-        print("初期化します")
+        print("画面表記を初期化します")
         self.messageLabel.text = ""
         self.Button.isHidden = false
         self.Button.setTitle("録音開始", for:.normal)
         self.yesButton.isHidden = true
         self.noButton.isHidden = true
-//        if let recognitionTask = self.recognitionTask {
-//          recognitionTask.cancel()
-//          self.recognitionTask = nil
-//        try! self.startRecording()
-//        }
+        print("画面表記を初期化しました")
     }
-    
-    
     
     //録音開始/録音終了ボタンの操作
     @IBAction func didTapButton(sender: UIButton){
         buttonStatus.toggle()
         
         if recordStatus == 0 {
-                self.Button.setTitle("録音終了", for: .normal)
+            try! self.speechText("録音を開始します")
+            self.Button.setTitle("録音終了", for: .normal)
                 //self.buttonStatus.toggle()
-                self.recordStatus += 1
+                self.recordStatus = 2
             
         }else if recordStatus ==  1 {
             self.buttonStatus.toggle()
@@ -285,37 +296,32 @@ class ViewController: UIViewController, AVSpeechSynthesizerDelegate, SFSpeechRec
             self.Button.isHidden = true
             self.yesButton.isHidden = false
             self.noButton.isHidden = false
-            try! self.confirm()
-            self.recordStatus += 1
+            try! self.speechText(self.savedString + "を保存しますか？")
+            self.recordStatus = 2
         }
     }
     
     //「はい」ボタンの操作
     @IBAction func tappedYesButton(_ sender: Any) {
-        print(self.savedString!,"登録します")
-        print(self.inputString)
+        print("「保存します」が押下されました。")
+        print(self.savedString! + "を保存します")
+        try! self.speechText("保存しました")
         try! self.stopRecording()
-        try! self.startRecording()
-//        self.recordStatus = 0
-
-        //表示を初期化
         self.initialize()
+        sleep(2)
+        try! self.startRecording()
         return
     }
     
     //「いいえ」ボタンの操作
     @IBAction func tappedNoButton(_ sender: Any) {
-        print(self.savedString!,"登録しません")
-        print(self.inputString)
+        print("「保存しません」が押下されました。")
+        print(self.savedString! + "は保存しません")
+        try! self.speechText("保存しません")
         try! self.stopRecording()
-        try! self.startRecording()
-        self.recordStatus = 0
- 
-        //表示を初期化
         self.initialize()
+        sleep(2)
+        try! self.startRecording()
         return
     }
 }
-
-
-
