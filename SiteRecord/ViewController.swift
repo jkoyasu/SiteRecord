@@ -161,7 +161,6 @@ class ViewController: UIViewController, AVSpeechSynthesizerDelegate, SFSpeechRec
                 if self.recordStatus == 0{
                     if self.inputString.contains("録音開始"){
                         print("音声「録音開始」を認識しました。録音を開始します。")
-                        try! self.speechText("録音を開始します")
                         self.Button.setTitle("録音終了", for: .normal)
                         //self.buttonStatus.toggle()
                         self.recordStatus = 1
@@ -189,9 +188,6 @@ class ViewController: UIViewController, AVSpeechSynthesizerDelegate, SFSpeechRec
                         self.messageLabel.text = "この内容で保存しますか？"
                         self.yesButton.isHidden = false
                         self.noButton.isHidden = false
-                        //コメント音声の発出
-                        try! self.speechText(self.savedString + "を保存しますか？")
-                    //self.speakText.speak(self.savedString + "を保存しました")
                         
                         self.recordStatus = 2
                     }
@@ -206,21 +202,17 @@ class ViewController: UIViewController, AVSpeechSynthesizerDelegate, SFSpeechRec
                     if self.inputString.contains("保存します"){
                         print("音声「保存します」を認識しました")
                         print(self.savedString! + "を保存します")
-                        try! self.speechText("保存しました")
                         try! self.stopRecording()
                         self.initialize()
-                        sleep(2)
                         try! self.startRecording()
                         return
                     //「いいえ」を検知したら保存せず、初期状態に戻す
 //                    }else if String(self.inputString[self.inputString.index(self.inputString.endIndex, offsetBy: -6)...]) == "保存しません"{
-                    }else if self.inputString.contains("保存しません"){
-                        print("音声「保存しません」を認識しました")
+                    }else if self.inputString.contains("破棄します"){
+                        print("音声「破棄します」を認識しました")
                         print(self.savedString! + "は保存しません")
-                        try! self.speechText("保存しません")
                         try! self.stopRecording()
                         self.initialize()
-                        sleep(2)
                         try! self.startRecording()
                         return
                     }
@@ -245,16 +237,8 @@ class ViewController: UIViewController, AVSpeechSynthesizerDelegate, SFSpeechRec
         try self.audioEngine.start()
     }
     
-    
 
     //音声を発声する
-    func speechText(_ text: String) throws{
-        try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback)
-        let utterance = AVSpeechUtterance(string: text)
-        utterance.voice = AVSpeechSynthesisVoice(language: "ja-JP")
-        self.talker.speak(utterance)
-        return
-    }
     
     internal func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didStart utterance: AVSpeechUtterance ) {
         print("start")
@@ -281,10 +265,9 @@ class ViewController: UIViewController, AVSpeechSynthesizerDelegate, SFSpeechRec
         buttonStatus.toggle()
         
         if recordStatus == 0 {
-            try! self.speechText("録音を開始します")
             self.Button.setTitle("録音終了", for: .normal)
                 //self.buttonStatus.toggle()
-                self.recordStatus = 2
+                self.recordStatus = 1
             
         }else if recordStatus ==  1 {
             self.buttonStatus.toggle()
@@ -296,7 +279,6 @@ class ViewController: UIViewController, AVSpeechSynthesizerDelegate, SFSpeechRec
             self.Button.isHidden = true
             self.yesButton.isHidden = false
             self.noButton.isHidden = false
-            try! self.speechText(self.savedString + "を保存しますか？")
             self.recordStatus = 2
         }
     }
@@ -305,10 +287,8 @@ class ViewController: UIViewController, AVSpeechSynthesizerDelegate, SFSpeechRec
     @IBAction func tappedYesButton(_ sender: Any) {
         print("「保存します」が押下されました。")
         print(self.savedString! + "を保存します")
-        try! self.speechText("保存しました")
         try! self.stopRecording()
         self.initialize()
-        sleep(2)
         try! self.startRecording()
         return
     }
@@ -317,10 +297,8 @@ class ViewController: UIViewController, AVSpeechSynthesizerDelegate, SFSpeechRec
     @IBAction func tappedNoButton(_ sender: Any) {
         print("「保存しません」が押下されました。")
         print(self.savedString! + "は保存しません")
-        try! self.speechText("保存しません")
         try! self.stopRecording()
         self.initialize()
-        sleep(2)
         try! self.startRecording()
         return
     }

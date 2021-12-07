@@ -51,7 +51,7 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5LO-2U-sfQ">
                                 <rect key="frame" x="207" y="424" width="207" height="40"/>
                                 <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="保存しません"/>
+                                <buttonConfiguration key="configuration" style="plain" title="破棄します"/>
                                 <connections>
                                     <action selector="tappedNoButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="qBe-xp-kbq"/>
                                 </connections>
