@@ -83,10 +83,10 @@ class ViewController: UIViewController, AVSpeechSynthesizerDelegate, SFSpeechRec
     func stopRecording(){
         print("stopRecording")
         self.recognitionRequest?.endAudio()
-//        self.recognitionRequest = nil
+        self.recognitionRequest = nil
         self.recognitionTask?.cancel()
         self.recognitionTask?.finish()
-//        self.recognitionTask = nil
+        self.recognitionTask = nil
         self.audioEngine.stop()
         self.audioEngine.inputNode.removeTap(onBus: 0)
 //        recordStatus = 0
@@ -102,18 +102,27 @@ class ViewController: UIViewController, AVSpeechSynthesizerDelegate, SFSpeechRec
     //音声認識の開始
     func startRecording() throws {
         
-        
+
         print("startRecording")
         self.displayText.text = ""
         self.inputString = ""
         self.recordStatus = 0
         print("recordStatus:\(self.recordStatus)")
         //既存のセッションが存在したら切る。
-        if let recognitionTask = recognitionTask {
+        if let recognitionTask = self.recognitionTask {
             print("既存のセッションを削除します")
             recognitionTask.cancel()
             self.recognitionTask = nil
         }
+        
+        if(self.recognitionTask == nil){
+            print("recognitionTask == nil")
+        }
+        
+        if(self.recognitionRequest == nil){
+            print("recognitionRequest == nil")
+        }
+        
         
         //オーディオセッションの作成
         print("オーディオセッションを作成します")
@@ -125,30 +134,34 @@ class ViewController: UIViewController, AVSpeechSynthesizerDelegate, SFSpeechRec
         let inputNode = audioEngine.inputNode
         inputNode.removeTap(onBus: 0)
         self.recognitionTask = SFSpeechRecognitionTask()
+        print("オーディオセッションの作成に成功しました")
         
         //音声認識リクエストの作成
-        print("音声認識リクエストを初期化します")
+        print("音声認識リクエストを作成します")
         self.recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
         if(self.recognitionTask == nil || self.recognitionRequest == nil){
             print("音声認識リクエストの作成に失敗しました")
             self.stopRecording()
             return
         }
+        print("音声認識リクエストの作成に成功しました。")
         
         //オーディオデータをデバイスに保存する設定をON
         recognitionRequest?.shouldReportPartialResults = true
         //認識結果を都度返す設定をON
         recognitionRequest?.requiresOnDeviceRecognition = true
+
         
         //recognitionTask関数に音声リクエストオブジェクトを渡すと、音声認識タスクが実行される。
-        recognitionTask = speechRecognizer.recognitionTask(with: recognitionRequest!) { [weak self] result, error in
+        
+        self.recognitionTask = speechRecognizer.recognitionTask(with: recognitionRequest!) { [weak self] result, error in
             guard let `self` = self else { return }
             
             //エラーが発生したら録音終了※くり返すとここで落ちる。
             if(error != nil){
                 print ("エラー発生:" + String(describing: error!))
-//                self.stopRecording()
-                return
+                //self.stopRecording()
+                //return
             }
             var isFinal = false //録音タイムリミットを検知する関数
             
@@ -239,15 +252,15 @@ class ViewController: UIViewController, AVSpeechSynthesizerDelegate, SFSpeechRec
     
 
     //音声を発声する
-    
-    internal func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didStart utterance: AVSpeechUtterance ) {
-        print("start")
-    }
-    
-    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
-        print("finish")
-        try! AVAudioSession.sharedInstance().setCategory(.record, mode: .measurement, options: .duckOthers)
-    }
+//
+//    internal func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didStart utterance: AVSpeechUtterance ) {
+//        print("start")
+//    }
+//
+//    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
+//        print("finish")
+//        try! AVAudioSession.sharedInstance().setCategory(.record, mode: .measurement, options: .duckOthers)
+//    }
 
     //保存確認後、最初の状態に戻す。
     func initialize(){
