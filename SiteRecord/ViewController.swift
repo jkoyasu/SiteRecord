@@ -207,8 +207,8 @@ class ViewController: UIViewController, AVSpeechSynthesizerDelegate, SFSpeechRec
                     print("recordStatus:\(self.recordStatus)")
                     self.displayText.text! = self.savedString
                     //「はい」を検知したら保存し、初期状態に戻す
-                    if String(self.inputString[self.inputString.index(self.inputString.endIndex, offsetBy: -5)...]) == "保存します"{
-//                    if self.inputString.contains("保存します"){
+//                    if String(self.inputString[self.inputString.index(self.inputString.endIndex, offsetBy: -5)...]) == "保存します"{
+                    if self.inputString.contains("保存します"){
                         print("音声「保存します」を認識しました")
                         print(self.savedString! + "を保存します")
                         self.stopRecording()
@@ -216,8 +216,8 @@ class ViewController: UIViewController, AVSpeechSynthesizerDelegate, SFSpeechRec
                         try! self.startRecording()
                         return
                     //「いいえ」を検知したら保存せず、初期状態に戻す
-                    }else if String(self.inputString[self.inputString.index(self.inputString.endIndex, offsetBy: -5)...]) == "破棄します"{
-//                    }else if self.inputString.contains("破棄します"){
+//                    }else if String(self.inputString[self.inputString.index(self.inputString.endIndex, offsetBy: -5)...]) == "破棄します"{
+                    }else if self.inputString.contains("破棄します"){
                         print("音声「破棄します」を認識しました")
                         print(self.savedString! + "は保存しません")
                         self.stopRecording()
