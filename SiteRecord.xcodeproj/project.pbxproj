@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		912132C5276ACD0800D3CA59 /* WebAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 912132C4276ACD0800D3CA59 /* WebAPIClient.swift */; };
+		912132C7276ACD2E00D3CA59 /* WebMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 912132C6276ACD2E00D3CA59 /* WebMessage.swift */; };
 		9125EC94275075890073767A /* SpeakText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9125EC93275075890073767A /* SpeakText.swift */; };
 		A2062D722734FC1000E13205 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2062D712734FC1000E13205 /* AppDelegate.swift */; };
 		A2062D742734FC1000E13205 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2062D732734FC1000E13205 /* SceneDelegate.swift */; };
@@ -18,6 +20,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		912132C4276ACD0800D3CA59 /* WebAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebAPIClient.swift; sourceTree = "<group>"; };
+		912132C6276ACD2E00D3CA59 /* WebMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebMessage.swift; sourceTree = "<group>"; };
 		9125EC93275075890073767A /* SpeakText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakText.swift; sourceTree = "<group>"; };
 		A2062D6E2734FC1000E13205 /* SiteRecord.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SiteRecord.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2062D712734FC1000E13205 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -63,8 +67,10 @@
 				A2062D712734FC1000E13205 /* AppDelegate.swift */,
 				A2062D732734FC1000E13205 /* SceneDelegate.swift */,
 				A2062D752734FC1100E13205 /* ViewController.swift */,
+				912132C4276ACD0800D3CA59 /* WebAPIClient.swift */,
 				9125EC93275075890073767A /* SpeakText.swift */,
 				A2B44BB2273A4774005F6864 /* Recoder.swift */,
+				912132C6276ACD2E00D3CA59 /* WebMessage.swift */,
 				A2062D772734FC1100E13205 /* Main.storyboard */,
 				A2062D7A2734FC1300E13205 /* Assets.xcassets */,
 				A2062D7C2734FC1300E13205 /* LaunchScreen.storyboard */,
@@ -144,8 +150,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				912132C5276ACD0800D3CA59 /* WebAPIClient.swift in Sources */,
 				9125EC94275075890073767A /* SpeakText.swift in Sources */,
 				A2B44BB3273A4774005F6864 /* Recoder.swift in Sources */,
+				912132C7276ACD2E00D3CA59 /* WebMessage.swift in Sources */,
 				A2062D762734FC1100E13205 /* ViewController.swift in Sources */,
 				A2062D722734FC1000E13205 /* AppDelegate.swift in Sources */,
 				A2062D742734FC1000E13205 /* SceneDelegate.swift in Sources */,

@@ -210,6 +210,7 @@ class ViewController: UIViewController, AVSpeechSynthesizerDelegate, SFSpeechRec
 //                    if String(self.inputString[self.inputString.index(self.inputString.endIndex, offsetBy: -5)...]) == "保存します"{
                     if self.inputString.contains("保存します"){
                         print("音声「保存します」を認識しました")
+                        self.postMessage(self.savedString)
                         print(self.savedString! + "を保存します")
                         self.stopRecording()
                         self.initialize()
@@ -257,7 +258,26 @@ class ViewController: UIViewController, AVSpeechSynthesizerDelegate, SFSpeechRec
 //        print("finish")
 //        try! AVAudioSession.sharedInstance().setCategory(.record, mode: .measurement, options: .duckOthers)
 //    }
+    
+    func postMessage(_ text:String){
+        //Todo 入力メッセージを元に投稿するメッセージを作成
+        let newMessage = WebMessage(id: nil, text: text)
+        print("サーバにポストします")
+        print(newMessage.text)
+        //メッセージを投稿
+        WebAPIClient.postMessage(webMessage: newMessage){[weak self] result in
+            
+            switch result {
+            case .success(let message):
+                print("\(message)を保存しました。")
+            case .failure(let error):
+                print("\(error)のエラーになりました。")
+            }
+            
+        }
 
+    }
+    
     //保存確認後、最初の状態に戻す。
     func initialize(){
         print("画面表記を初期化します")
@@ -298,6 +318,7 @@ class ViewController: UIViewController, AVSpeechSynthesizerDelegate, SFSpeechRec
     @IBAction func tappedYesButton(_ sender: Any) {
         print("「保存します」が押下されました。")
         print(self.savedString! + "を保存します")
+        self.postMessage(self.savedString)
         self.stopRecording()
         self.initialize()
         try! self.startRecording()
